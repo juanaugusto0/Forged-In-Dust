@@ -3,3 +3,9 @@ logs/
 crash-reports/
 saves/
 .kubejs_items/
+
+config/jei/world/local/
+config/voicechat/
+
+local/
+natives/

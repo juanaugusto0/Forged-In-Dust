@@ -1,38 +1,51 @@
 // Este arquivo é onde serao adicionados todas os minerios personalizados para este modpack.
 
 StartupEvents.registry('item', event => {
-    
-    // Dictionary of materials and their hex colors
     const materials = {
         iron: 0xD8D8D8,
         gold: 0xFDF55F,
         copper: 0xE77C56,
-        zinc: 0x98BEA9
-        // You can easily add more materials here later!
+        uranium: 0x52C443,
+        zinc: 0x98BEA9,
+        osmium: 0x7B93A8,
+        iesnium: 0x12B0A6,
+        tin: 0x9EC7C9,
+        lead: 0x444654,
+        silver: 0xD9F1F4,
+        nickel: 0xBFBA86,
+        cobalt: 0x193A70
     };
 
-    // Array of stages that require the dirt overlay
-    const impureStages = ['raw_impure', 'crushed_impure', 'pulverized_impure'];
+    // Mapeamento do estágio do item para a categoria base da tag no Forge
+    const impureStages = {
+        'raw_impure': 'raw_materials',
+        'crushed_impure': 'crushed_ores',
+        'pulverized_impure': 'pulverized_ores'
+    };
 
-    // Loop through each material (iron, gold, etc.)
-    Object.keys(materials).forEach(material => {
+    Object.entries(materials).forEach(([material, hexColor]) => {
         
-        // 1. Generate the Impure Stages (2 Layers: Base + Dirt)
-        impureStages.forEach(stage => {
+        // 1. Gera os estágios impuros e aplica as tags dinâmicas
+        Object.entries(impureStages).forEach(([stage, tagCategory]) => {
             event.create(`${stage}_${material}`)
                 .modelJson({
                     parent: 'minecraft:item/generated',
                     textures: {
-                        layer0: `kubejs:item/${stage}_base`,        // Layer 0: The gray stone base
-                        layer1: `kubejs:item/dirt_overlay_${stage}` // Layer 1: The brown dirt details
+                        layer0: `kubejs:item/${stage}_base`,
+                        layer1: `kubejs:item/dirt_overlay_${stage}`
                     }
                 })
-                .color(0, materials[material]); // Applies the color ONLY to layer0 (the stone)
+                .color(0, hexColor)
+                // Adiciona a tag geral (ex: forge:raw_materials) e a específica (ex: forge:raw_materials/iron)
+                .tag(`forge:${tagCategory}`)
+                .tag(`forge:${tagCategory}/${material}`);
         });
 
-        // 2. Generate the Dust Stage (1 Layer: Only the colored powder)
+        // 2. Gera o Dust e aplica as tags padrão de pó
         event.create(`${material}_dust`)
             .texture('kubejs:item/dust_base')
-            .color(0, materials[material]); // Applies color to the dust
+            .color(0, hexColor)
+            .tag('forge:dusts')
+            .tag(`forge:dusts/${material}`);
     });
 });

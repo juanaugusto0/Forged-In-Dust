@@ -26,16 +26,16 @@ Note: Even if no fields are listed above, some methods are still available as fi
 | Name | Parameters | Return type | Static? |
 | ---- | ---------- | ----------- | ------- |
 | getBlock |  |  | BlockContainerJS | ✘ |
-| isPowered |  |  | boolean | ✘ |
 | getLevel |  |  | Level | ✘ |
+| isPowered |  |  | boolean | ✘ |
 | getDetectorId |  |  | String | ✘ |
 | getServer |  |  | MinecraftServer | ✘ |
 | exit | Object |  | Object | ✘ |
 | exit |  |  | Object | ✘ |
 | success | Object |  | Object | ✘ |
 | success |  |  | Object | ✘ |
-| cancel | Object |  | Object | ✘ |
 | cancel |  |  | Object | ✘ |
+| cancel | Object |  | Object | ✘ |
 
 
 ### Documented members:
@@ -45,14 +45,14 @@ Note: Even if no fields are listed above, some methods are still available as fi
 The detector block.
 ```
 
-- `boolean isPowered()`
-```
-If the detector block is powered.
-```
-
 - `Level getLevel()`
 ```
 The level where the detector block is located.
+```
+
+- `boolean isPowered()`
+```
+If the detector block is powered.
 ```
 
 - `String getDetectorId()`
@@ -96,6 +96,13 @@ Stops the event with default exit value. Execution will be stopped **immediately
 `success` denotes a `true` outcome.
 ```
 
+- `Object cancel()`
+```
+Cancels the event with default exit value. Execution will be stopped **immediately**.
+
+`cancel` denotes a `false` outcome.
+```
+
 - `Object cancel(Object var0)`
 
   Parameters:
@@ -103,13 +110,6 @@ Stops the event with default exit value. Execution will be stopped **immediately
 
 ```
 Cancels the event with the given exit value. Execution will be stopped **immediately**.
-
-`cancel` denotes a `false` outcome.
-```
-
-- `Object cancel()`
-```
-Cancels the event with default exit value. Execution will be stopped **immediately**.
 
 `cancel` denotes a `false` outcome.
 ```

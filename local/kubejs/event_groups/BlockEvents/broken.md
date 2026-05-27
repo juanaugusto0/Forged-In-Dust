@@ -23,39 +23,34 @@ Note: Even if no fields are listed above, some methods are still available as fi
 
 | Name | Parameters | Return type | Static? |
 | ---- | ---------- | ----------- | ------- |
-| getEntity |  |  | Entity | ✘ |
 | getBlock |  |  | BlockContainerJS | ✘ |
-| getXp |  |  | int | ✘ |
+| getEntity |  |  | LivingEntity | ✘ |
 | setXp | int |  | void | ✘ |
+| getXp |  |  | int | ✘ |
 | getPlayer |  |  | Player | ✘ |
-| hasGameStage | String |  | boolean | ✘ |
-| removeGameStage | String |  | void | ✘ |
 | addGameStage | String |  | void | ✘ |
+| removeGameStage | String |  | void | ✘ |
+| hasGameStage | String |  | boolean | ✘ |
 | getLevel |  |  | Level | ✘ |
 | getServer |  |  | MinecraftServer | ✘ |
 | exit | Object |  | Object | ✘ |
 | exit |  |  | Object | ✘ |
 | success | Object |  | Object | ✘ |
 | success |  |  | Object | ✘ |
-| cancel | Object |  | Object | ✘ |
 | cancel |  |  | Object | ✘ |
+| cancel | Object |  | Object | ✘ |
 
 
 ### Documented members:
-
-- `Entity getEntity()`
-```
-The player that broke the block.
-```
 
 - `BlockContainerJS getBlock()`
 ```
 The block that was broken.
 ```
 
-- `int getXp()`
+- `LivingEntity getEntity()`
 ```
-The experience dropped by the block. Always `0` on Fabric.
+The player that broke the block.
 ```
 
 - `void setXp(int var0)`
@@ -67,13 +62,18 @@ The experience dropped by the block. Always `0` on Fabric.
 Sets the experience dropped by the block. Only works on Forge.
 ```
 
-- `boolean hasGameStage(String var0)`
+- `int getXp()`
+```
+The experience dropped by the block. Always `0` on Fabric.
+```
+
+- `void addGameStage(String var0)`
 
   Parameters:
   - var0: String
 
 ```
-Checks if the player has the specified game stage
+Adds the specified game stage to the player
 ```
 
 - `void removeGameStage(String var0)`
@@ -85,13 +85,13 @@ Checks if the player has the specified game stage
 Removes the specified game stage from the player
 ```
 
-- `void addGameStage(String var0)`
+- `boolean hasGameStage(String var0)`
 
   Parameters:
   - var0: String
 
 ```
-Adds the specified game stage to the player
+Checks if the player has the specified game stage
 ```
 
 - `Object exit(Object var0)`
@@ -130,6 +130,13 @@ Stops the event with default exit value. Execution will be stopped **immediately
 `success` denotes a `true` outcome.
 ```
 
+- `Object cancel()`
+```
+Cancels the event with default exit value. Execution will be stopped **immediately**.
+
+`cancel` denotes a `false` outcome.
+```
+
 - `Object cancel(Object var0)`
 
   Parameters:
@@ -137,13 +144,6 @@ Stops the event with default exit value. Execution will be stopped **immediately
 
 ```
 Cancels the event with the given exit value. Execution will be stopped **immediately**.
-
-`cancel` denotes a `false` outcome.
-```
-
-- `Object cancel()`
-```
-Cancels the event with default exit value. Execution will be stopped **immediately**.
 
 `cancel` denotes a `false` outcome.
 ```

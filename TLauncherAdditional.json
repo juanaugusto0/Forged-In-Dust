@@ -5821,61 +5821,6 @@
         },
         {
           "stateGameElement": "active",
-          "id": 239197,
-          "name": "CraftTweaker",
-          "author": "jaredlll08 StanH",
-          "linkProject": "https://www.curseforge.com/minecraft/mc-mods/crafttweaker",
-          "favorite": false,
-          "categories": [],
-          "picture": 781715,
-          "pictures": [],
-          "lanName": "crafttweaker1",
-          "version": {
-            "id": 7772873,
-            "name": "forge-1.20.1-14.0.60",
-            "updateDate": 1773773100000,
-            "type": "release",
-            "gameVersionsDTO": [
-              {
-                "id": 46,
-                "name": "1.20.1"
-              }
-            ],
-            "metadata": {
-              "sha1": "79ddddd3f14f8d4992ba90a7a8980918ed1b9ff8",
-              "size": 3271742,
-              "path": "mods/CraftTweaker-forge-1.20.1-14.0.60.jar",
-              "url": "/mods/239197/7772873/CraftTweaker-forge-1.20.1-14.0.60.jar"
-            },
-            "installed": 4645,
-            "available": false,
-            "remove": false,
-            "minecraftVersionTypes": [
-              {
-                "id": 1,
-                "name": "forge"
-              }
-            ]
-          },
-          "popularity": 5,
-          "downloadMonth": 1021,
-          "userInstall": false,
-          "populateStatus": false,
-          "dependencies": [],
-          "lastGameVersion": {
-            "id": 53,
-            "name": "1.21.1"
-          },
-          "updated": 1773694800000,
-          "update": 1773694800000,
-          "downloadALL": 2906118,
-          "available": true,
-          "parser": true,
-          "totalComments": 0,
-          "adult": false
-        },
-        {
-          "stateGameElement": "active",
           "id": 257814,
           "name": "CreativeCore",
           "author": "CreativeMD",

@@ -26,18 +26,18 @@ Note: Even if no fields are listed above, some methods are still available as fi
 | Name | Parameters | Return type | Static? |
 | ---- | ---------- | ----------- | ------- |
 | add | Ingredient, Object |  | void | ✘ |
+| addAdvancedToAll | StaticTooltipHandlerFromJS |  | void | ✘ |
+| isAlt |  |  | boolean | ✘ |
 | isShift |  |  | boolean | ✘ |
 | isCtrl |  |  | boolean | ✘ |
-| isAlt |  |  | boolean | ✘ |
-| addAdvancedToAll | StaticTooltipHandlerFromJS |  | void | ✘ |
 | addToAll | Object |  | void | ✘ |
 | addAdvanced | Ingredient, StaticTooltipHandlerFromJS |  | void | ✘ |
 | exit | Object |  | Object | ✘ |
 | exit |  |  | Object | ✘ |
 | success | Object |  | Object | ✘ |
 | success |  |  | Object | ✘ |
-| cancel | Object |  | Object | ✘ |
 | cancel |  |  | Object | ✘ |
+| cancel | Object |  | Object | ✘ |
 
 
 ### Documented members:
@@ -52,6 +52,20 @@ Note: Even if no fields are listed above, some methods are still available as fi
 Adds text to all items matching the ingredient.
 ```
 
+- `void addAdvancedToAll(StaticTooltipHandlerFromJS var0)`
+
+  Parameters:
+  - var0: StaticTooltipHandlerFromJS
+
+```
+Adds a dynamic tooltip handler to all items.
+```
+
+- `boolean isAlt()`
+```
+Is alt key pressed.
+```
+
 - `boolean isShift()`
 ```
 Is shift key pressed.
@@ -60,20 +74,6 @@ Is shift key pressed.
 - `boolean isCtrl()`
 ```
 Is control key pressed.
-```
-
-- `boolean isAlt()`
-```
-Is alt key pressed.
-```
-
-- `void addAdvancedToAll(StaticTooltipHandlerFromJS var0)`
-
-  Parameters:
-  - var0: StaticTooltipHandlerFromJS
-
-```
-Adds a dynamic tooltip handler to all items.
 ```
 
 - `void addToAll(Object var0)`
@@ -131,6 +131,13 @@ Stops the event with default exit value. Execution will be stopped **immediately
 `success` denotes a `true` outcome.
 ```
 
+- `Object cancel()`
+```
+Cancels the event with default exit value. Execution will be stopped **immediately**.
+
+`cancel` denotes a `false` outcome.
+```
+
 - `Object cancel(Object var0)`
 
   Parameters:
@@ -138,13 +145,6 @@ Stops the event with default exit value. Execution will be stopped **immediately
 
 ```
 Cancels the event with the given exit value. Execution will be stopped **immediately**.
-
-`cancel` denotes a `false` outcome.
-```
-
-- `Object cancel()`
-```
-Cancels the event with default exit value. Execution will be stopped **immediately**.
 
 `cancel` denotes a `false` outcome.
 ```
