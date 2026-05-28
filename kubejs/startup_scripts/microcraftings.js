@@ -12,8 +12,12 @@ StartupEvents.registry('item', event => {
         'rod': 'rods',
         'bolt': 'bolts',
         'double_plate': 'double_plates',
-        'dense_plate': 'dense_plates', // Adicionado
-        'screw': 'screws'              // Adicionado
+        'dense_plate': 'dense_plates',
+        'screw': 'screws',
+        'curved_plate': 'curved_plates',
+        'ring': 'rings',
+        'rotor': 'rotors',
+        'foil': 'foils'
     };
 
     Object.entries(materials).forEach(([material, hexColor]) => {

@@ -82,18 +82,34 @@ ServerEvents.recipes(event => {
 
     Object.entries(materials).forEach(([material, nuggetOutput]) => {
     
-        // Inputs KubeJS
+        // Inputs KubeJS (Exclusivos do Modpack)
         const rawKubeJS = `kubejs:raw_impure_${material}`;
         const crushedKubeJS = `kubejs:crushed_impure_${material}`;
         const pulverizedKubeJS = `kubejs:pulverized_impure_${material}`;
         
-        // Input Forge
+        // Inputs Forge (Universais para pegar Vanilla, Create, Mekanism, etc.)
         const dustTag = `#forge:dusts/${material}`;
+        const crushedTag = `#forge:crushed_ores/${material}`;
+        const rawTag = `#forge:raw_materials/${material}`;
 
+        // ==========================================
+        // REMOÇÃO DO DERRETIMENTO PADRÃO
+        // ==========================================
+        // Remove as receitas que dariam 1 Ingot completo ao derreter esses itens
+        ['minecraft:smelting', 'minecraft:blasting'].forEach(recipeType => {
+            event.remove({ type: recipeType, input: dustTag });
+            event.remove({ type: recipeType, input: crushedTag });
+            event.remove({ type: recipeType, input: rawTag });
+            event.remove({ type: recipeType, input: '#create:crushed_raw_materials' });
+        });
+
+        // ==========================================
+        // PROCESSAMENTO DE MINÉRIOS (CRAFTING)
+        // ==========================================
         // 1. Crushing: Raw + Hammer = Crushed
         event.shapeless(crushedKubeJS, [
             rawKubeJS, 
-            '#forge:tools/hammers' // Corrigido para hammers
+            '#forge:tools/hammers' 
         ]).damageIngredient('#forge:tools/hammers');
 
         // 2. Grinding: Crushed + Mortar = Pulverized
@@ -102,23 +118,28 @@ ServerEvents.recipes(event => {
             '#forge:tools/mortars'
         ]).damageIngredient('#forge:tools/mortars');
 
+
         // ==========================================
         // MECÂNICA DE DERRETIMENTO (YIELDS)
         // ==========================================
 
-        // Nível 1: Raw Impure -> 1x Nugget
+        // Nível 1: Raw (Impure KubeJS + Vanilla/Mods) -> 1x Nugget
         event.smelting(`1x ${nuggetOutput}`, rawKubeJS);
         event.blasting(`1x ${nuggetOutput}`, rawKubeJS);
+        event.smelting(`1x ${nuggetOutput}`, rawTag);
+        event.blasting(`1x ${nuggetOutput}`, rawTag);
 
-        // Nível 2: Crushed Impure -> 3x Nuggets
+        // Nível 2: Crushed (Impure KubeJS + Create/Mods) -> 3x Nuggets
         event.smelting(`3x ${nuggetOutput}`, crushedKubeJS);
         event.blasting(`3x ${nuggetOutput}`, crushedKubeJS);
+        event.smelting(`3x ${nuggetOutput}`, crushedTag);
+        event.blasting(`3x ${nuggetOutput}`, crushedTag);
 
-        // Nível 3: Pulverized Impure -> 6x Nuggets
+        // Nível 3: Pulverized (Exclusivo KubeJS) -> 6x Nuggets
         event.smelting(`6x ${nuggetOutput}`, pulverizedKubeJS);
         event.blasting(`6x ${nuggetOutput}`, pulverizedKubeJS);
 
-        // Nível 4 (Final): Dust -> 9x Nuggets
+        // Nível 4 (Final): Dust (Universal Tag) -> 9x Nuggets
         event.smelting(`9x ${nuggetOutput}`, dustTag);
         event.blasting(`9x ${nuggetOutput}`, dustTag);
     
