@@ -16,7 +16,6 @@ StartupEvents.registry('item', event => {
         cobalt: 0x193A70
     };
 
-    // Mapeamento do estágio do item para a categoria base da tag no Forge
     const impureStages = {
         'raw_impure': 'raw_materials',
         'crushed_impure': 'crushed_ores',
@@ -25,7 +24,6 @@ StartupEvents.registry('item', event => {
 
     Object.entries(materials).forEach(([material, hexColor]) => {
         
-        // 1. Gera os estágios impuros e aplica as tags dinâmicas
         Object.entries(impureStages).forEach(([stage, tagCategory]) => {
             event.create(`${stage}_${material}`)
                 .modelJson({
@@ -36,12 +34,10 @@ StartupEvents.registry('item', event => {
                     }
                 })
                 .color(0, hexColor)
-                // Adiciona a tag geral (ex: forge:raw_materials) e a específica (ex: forge:raw_materials/iron)
                 .tag(`forge:${tagCategory}`)
                 .tag(`forge:${tagCategory}/${material}`);
         });
 
-        // 2. Gera o Dust e aplica as tags padrão de pó
         event.create(`${material}_dust`)
             .texture('kubejs:item/dust_base')
             .color(0, hexColor)

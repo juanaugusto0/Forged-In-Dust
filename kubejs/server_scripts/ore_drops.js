@@ -1,5 +1,6 @@
+// Lógica para processamento de minérios personalizados, incluindo as tabelas de loot para os blocos de minério e as receitas de transformação (esmagamento, moagem, lavagem e fundição).
+
 ServerEvents.highPriorityData(event => {
-    // Apenas a lista mestre de metais
     const materials = ['iron', 'gold', 'copper', 'uranium', 'zinc', 'osmium', 'iesnium', 'tin', 'lead', 'silver', 'nickel', 'cobalt'];
 
     materials.forEach(material => {
@@ -22,7 +23,6 @@ ServerEvents.highPriorityData(event => {
                             {
                                 type: "minecraft:alternatives",
                                 children: [
-                                    // 1. Toque de Seda (Silk Touch) dropa o próprio bloco dinamicamente
                                     {
                                         type: "minecraft:item",
                                         name: blockId, 
@@ -35,7 +35,6 @@ ServerEvents.highPriorityData(event => {
                                             }
                                         ]
                                     },
-                                    // 2. Drop Customizado com Fortuna e Explosão
                                     {
                                         type: "minecraft:item",
                                         name: dropItem,
@@ -57,7 +56,6 @@ ServerEvents.highPriorityData(event => {
                 ]
             };
 
-            // Injeta o JSON na pasta do mod correto automaticamente
             event.addJson(`${modNamespace}:loot_tables/blocks/${blockName}.json`, lootTableJson);
             event.addJson(`${modNamespace}:loot_table/blocks/${blockName}.json`, lootTableJson);
         });
@@ -66,7 +64,6 @@ ServerEvents.highPriorityData(event => {
 
 
 ServerEvents.recipes(event => {
-
 
     const materials = {
         iron: 'minecraft:iron_nugget',
@@ -84,23 +81,47 @@ ServerEvents.recipes(event => {
     };
 
     Object.entries(materials).forEach(([material, nuggetOutput]) => {
+    
+        // Inputs KubeJS
+        const rawKubeJS = `kubejs:raw_impure_${material}`;
+        const crushedKubeJS = `kubejs:crushed_impure_${material}`;
+        const pulverizedKubeJS = `kubejs:pulverized_impure_${material}`;
         
-        // Gera os IDs dinamicamente baseados no nome do material
-        const raw = `kubejs:raw_impure_${material}`;
-        const crushed = `kubejs:crushed_impure_${material}`;
-        const pulverized = `kubejs:pulverized_impure_${material}`;
-        const dust = `kubejs:${material}_dust`;
+        // Input Forge
+        const dustTag = `#forge:dusts/${material}`;
 
-        // 1. Esmagar (Crushing): Raw + Mallet = Crushed
-        event.shapeless(crushed, [raw, 'kubejs:soft_mallet']).damageIngredient('kubejs:soft_mallet');
+        // 1. Crushing: Raw + Hammer = Crushed
+        event.shapeless(crushedKubeJS, [
+            rawKubeJS, 
+            '#forge:tools/hammers' // Corrigido para hammers
+        ]).damageIngredient('#forge:tools/hammers');
 
-        // 2. Moer (Grinding): Crushed + Mortar = Pulverized
-        event.shapeless(pulverized, [crushed, 'kubejs:mortar']).damageIngredient('kubejs:mortar');
+        // 2. Grinding: Crushed + Mortar = Pulverized
+        event.shapeless(pulverizedKubeJS, [
+            crushedKubeJS, 
+            '#forge:tools/mortars'
+        ]).damageIngredient('#forge:tools/mortars');
 
-        // 3. Fundir (Smelting & Blasting): Dust -> 9x Nugget
-        event.smelting(`9x ${nuggetOutput}`, dust);
-        event.blasting(`9x ${nuggetOutput}`, dust);
-        
+        // ==========================================
+        // MECÂNICA DE DERRETIMENTO (YIELDS)
+        // ==========================================
+
+        // Nível 1: Raw Impure -> 1x Nugget
+        event.smelting(`1x ${nuggetOutput}`, rawKubeJS);
+        event.blasting(`1x ${nuggetOutput}`, rawKubeJS);
+
+        // Nível 2: Crushed Impure -> 3x Nuggets
+        event.smelting(`3x ${nuggetOutput}`, crushedKubeJS);
+        event.blasting(`3x ${nuggetOutput}`, crushedKubeJS);
+
+        // Nível 3: Pulverized Impure -> 6x Nuggets
+        event.smelting(`6x ${nuggetOutput}`, pulverizedKubeJS);
+        event.blasting(`6x ${nuggetOutput}`, pulverizedKubeJS);
+
+        // Nível 4 (Final): Dust -> 9x Nuggets
+        event.smelting(`9x ${nuggetOutput}`, dustTag);
+        event.blasting(`9x ${nuggetOutput}`, dustTag);
+    
     });
 
 });
@@ -113,27 +134,22 @@ materials.forEach(material => {
     washRecipes[`kubejs:pulverized_impure_${material}`] = `kubejs:${material}_dust`;
 });
 
-// 2. O evento de Tick foca apenas na varredura do mundo
 LevelEvents.tick(event => {
     const level = event.level;
 
-    // Só executa a lógica a cada 20 ticks (1 segundo) para evitar lag
     if (level.time % 20 !== 0) return;
 
     // Pega todas as entidades na dimensão
     let allEntities = level.getEntities();
 
     allEntities.forEach(entity => {
-        // Se não for um item caído no chão, ignora instantaneamente
         if (entity.type !== 'minecraft:item') return;
 
         let currentItemId = entity.item.id;
         let resultDust = washRecipes[currentItemId];
 
-        // Se o item não estiver no nosso dicionário de lavagem, ignora
         if (!resultDust) return;
 
-        // Verifica se a entidade está efetivamente dentro de água
         let inWater = entity.isInWater() || 
                       entity.block.id === 'minecraft:water' || 
                       (entity.block.properties && entity.block.properties.waterlogged === 'true');
@@ -141,10 +157,8 @@ LevelEvents.tick(event => {
         if (inWater) {
             let itemCount = entity.item.count;
             
-            // Substitui o item no chão pelo Dust limpo, mantendo a quantidade da pilha
             entity.item = Item.of(resultDust, itemCount);
             
-            // Dispara as partículas e o som exatamente na coordenada do item
             level.server.runCommandSilent(`playsound minecraft:block.brewing_stand.brew block @a ${entity.x} ${entity.y} ${entity.z} 0.5 1.0`);
             level.server.runCommandSilent(`particle minecraft:bubble_pop ${entity.x} ${entity.y + 0.2} ${entity.z} 0.2 0.2 0.2 0.1 15`);
         }
