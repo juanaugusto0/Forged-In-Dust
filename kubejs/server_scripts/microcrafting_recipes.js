@@ -115,14 +115,6 @@ ServerEvents.recipes(event => {
             P: plateTag
         }).damageIngredient('#forge:tools/hammers');
 
-        // 11. Curved Plate
-        event.shaped(curvedPlateOut, [
-            'H ',
-            'PP'
-        ], {
-            H: '#forge:tools/hammers',
-            P: plateTag
-        }).damageIngredient('#forge:tools/hammers');
 
     });
 });
